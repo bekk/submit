@@ -14,8 +14,7 @@ import Messages exposing (Msg(..))
 
 introText : List String
 introText =
-    [ "Fredag, 2. mars, arrangeres Bekk Open Fagdag for 3. året på rad. Dette er en fantastisk mulighet for å vise oss frem for kunder og komme med viktige beskjeder til bransjen."
-    , "Det er ingen tema for denne fagdagen. Her står vi fritt til å sende inn hva vi brenner for mest."
+    [ ""
     ]
 
 
@@ -58,14 +57,7 @@ viewSubmissions model submissions =
             else
                 List.map viewYear submissions.years
 
-        introtext =
-            if List.length submissions.years == 0 then
-                text ""
-            else
-                div [] <|
-                    [ p [ class "intro-text intro-text--pitch" ] [ text "Bekk Open Fagdag 2018!" ]
-                    ]
-                        ++ List.map (\t -> p [ class "intro-text" ] [ text t ]) introText
+        introtext = text ""
     in
         [ div [ class "flex-header" ]
             [ h1 [ class "flex-header-element" ] [ text "Dine foredrag" ]
