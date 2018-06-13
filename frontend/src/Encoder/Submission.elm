@@ -2,6 +2,7 @@ module Encoder.Submission exposing (encoder, encodeComment)
 
 import Model.Submission exposing (..)
 import Json.Encode exposing (Value, object, string, list)
+import DataTypes.SubmissionFormat as SubFormat
 
 
 encoder : Submission -> Value
@@ -12,7 +13,7 @@ encoder submission =
         , ( "abstract", string submission.abstract )
         , ( "intendedAudience", string submission.intendedAudience )
         , ( "equipment", string submission.equipment )
-        , ( "format", string submission.format )
+        , ( "format", string <| SubFormat.toSlug submission.format )
         , ( "language", string submission.language )
         , ( "length", string submission.length )
         , ( "outline", string submission.outline )

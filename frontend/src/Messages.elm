@@ -1,9 +1,10 @@
 module Messages exposing (Msg(..), SubmissionField(..))
 
+import DataTypes.SubmissionFormat exposing (SubmissionFormat)
 import Nav.Model exposing (Page)
 import Http exposing (Error)
 import Model.Submissions exposing (Submissions)
-import Model.Submission exposing (Submission, Speaker)
+import Model.Submission exposing (Speaker, Submission)
 import Ports exposing (UploadedImageData)
 import Time
 
@@ -34,7 +35,7 @@ type SubmissionField
     = Title String
     | Abstract String
     | Equipment String
-    | Format String
+    | Format SubmissionFormat
     | IntendedAudience String
     | Language String
     | Length String
