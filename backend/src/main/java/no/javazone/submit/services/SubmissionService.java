@@ -70,7 +70,7 @@ public class SubmissionService {
         return new SubmissionsForUser(
                 groupedByConference.entrySet().stream()
                         .map((e) -> sleepingpillYearToOurYear(e, authenticatedUser))
-                        .sorted(Comparator.<Year, String>comparing(y -> y.year).reversed())
+                        .sorted(Comparator.<Year, String>comparing(y -> y.slug).reversed())
                         .collect(toList())
         );
     }
@@ -78,6 +78,7 @@ public class SubmissionService {
     private Year sleepingpillYearToOurYear(Map.Entry<String, List<Session>> e, AuthenticatedUser authenticatedUser) {
         return new Year(
                 conferences.getNameFromId(e.getKey()),
+                conferences.getSlugFromId(e.getKey()),
                 e.getValue().stream().map((session) -> fromSleepingPillSession(session, authenticatedUser)).collect(toList())
         );
     }
