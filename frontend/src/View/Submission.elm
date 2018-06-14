@@ -1,5 +1,6 @@
 module View.Submission exposing (view)
 
+import DataTypes.SubmissionFormat as SubFormat exposing (SubmissionFormat(..))
 import Model.Submission exposing (..)
 import Messages exposing (..)
 import Messages exposing (..)
@@ -75,102 +76,130 @@ viewFooter submission model =
 
 viewSubmissionDetails : Submission -> Model -> Html SubmissionField
 viewSubmissionDetails submission model =
-    div []
-        [ div [ class "logo-wrapper" ] [ div [ class "logo" ] [] ]
-        , div [ class <| "edit-intro " ++ hideIfNotEditable submission.editable ]
-            [ h1 [] [ text "Kjør på, beskriv foredraget ditt" ]
-            , p [ class "ingress" ] [ text "Fyll inn feltene nedenfor for å sende inn ditt forslag til fagdag-foredrag. Ikke glem å markere det som innsendt når du er ferdig, så komiteen vet at du er ferdig med kladdingen." ]
-            , div [ class "help-part" ]
-                [ strong [] [ span [] [ text "31. januar 2018" ], text "Frist for innsending" ]
-                , p [] [ text "Skriv ferdig foredrags-forslagene dine og marker de som innsendt innen denne datoen. Vi autolagrer for deg underveis så du aldri risikerer å miste noe." ]
-                ]
-            , div [ class "help-part" ]
-                [ strong [] [ span [] [ text "6. februar 2017" ], text "Foredrag blir valgt ut" ]
-                , p [] [ text "Vi forsøker å velge ut alle foredragene innen denne tiden." ]
-                ]
-            , div [ class "help-part" ]
-                [ strong [] [ span [] [ text "2. mars 2017" ], text "Fagdag! Wooh!" ]
-                , p [] [ text "Frem med HDMI-donglene, pynt på håret – her skal det presenteres. Uansett om det er en lyntale du skal holde for aller første gang; eller du har gjort dette 100 ganger før, men likevel har sommerfugler i magen: lykke til! :)" ]
-                ]
-            ]
-        , div [ class <| "comments-wrapper " ++ hideIfNoComments submission ]
-            [ h2 [] [ text "Kommentarer fra komiteen" ]
-            , p [] [ text "Komiteen har lagt inn følgende kommentarer på ditt foredrag. Du kan kommentere tilbake, eller bare redigere foredraget ditt nedenfor dersom det er gode forbedringsforslag." ]
-            , viewComments submission model
-            ]
-        , div [ class "edit-submission" ]
-            [ div [ class <| "cant-edit-message " ++ hideIfEditable submission.editable ] [ text "Du kan ikke redigere dette foredraget. Kun foredrag fra fremtidige fagdager er redigerbare." ]
-            , div [ class "input-section" ]
-                [ h2 [] [ text "Tittel" ]
-                , p [ class "input-description" ] [ text "Beskriv foredraget ditt med en kort og konsis tittel. Humor er viktig, men ikke gjør det for fancy – husk at folk skal skjønne hva du skal snakke om ;)" ]
-                , input [ type_ "text", value submission.title, onInput Title, placeholder "Kort og konsist = perfekt og presist!" ] []
-                ]
-            , div [ class "input-section" ]
-                [ h2 [] [ text "Beskrivelse" ]
-                , p [ class "input-description" ] [ text "Skriv en kort beskrivelse av foredraget/workshop'en din. Maks 150 ord er en fin tommelfinger-regel." ]
-                , textarea [ value submission.abstract, onInput Abstract, placeholder "Her kan du selge foredraget ditt! Hvorfor burde vi komme og høre på _akkurat deg_?" ] []
-                ]
-            , div [ class "input-section" ]
-                [ h2 [] [ text "Format" ]
-                , p [ class "input-description" ] [ text "Hvilket format ser du for deg passer best for å få fram poenget ditt? Kort og konsist, lengre og mer utfyllende, eller skikkelig hands-on?" ]
-                , radio "Presentasjon" "format" "presentation" (Format "presentation") <| submission.format == "presentation"
-                , radio "Lyntale" "format" "lightning-talk" (Format "lightning-talk") <| submission.format == "lightning-talk"
-                , radio "Workshop" "format" "workshop" (Format "workshop") <| submission.format == "workshop"
-                ]
-            , div [ class "input-section" ]
-                [ h2 [] [ text "Lengde" ]
-                , p [ class "input-description" ] [ text <| formatText submission.format ]
-                , viewLength submission
-                ]
-            , div [ class "input-section" ]
-                [ h2 [] [ text "Ekstra utstyr?" ]
-                , p [ class "input-description" ] [ text "Er det noe spesielt du trenger for å gjennomføre sesjonen din? Gjelder spesielt workshop's. Du trenger ikke spesifisere åpenbare ting som prosjektor, nettverk og mikrofon, men trenger du en utstoppet oter så bør du skrive opp det..." ]
-                , textarea [ class "small-textarea", value submission.equipment, onInput Equipment, placeholder "Skriv hva du trenger, din personlige raider. Røde non-stop?..." ] []
-                ]
-            , div [ class "input-section" ]
-                [ div [ class "flex-header" ]
-                    [ h2 [ class "flex-header-element" ] [ text "Hvem er du? (eller dere)" ]
-                    , div [ class "flex-header-element" ]
-                        [ if List.length submission.speakers > 4 then
-                            div [] []
-                          else
-                            button [ onClick AddSpeaker, class "button-new" ] [ text "Legg til foredragsholder" ]
-                        ]
+    let
+        possibleSubmissionFormats =
+            [ Presentation, LightningTalk, Workshop, Exhibition, PechaKucha, Video, WhateverYouWant ]
+    in
+        div []
+            [ div [ class "logo-wrapper" ] [ div [ class "logo" ] [] ]
+            , div [ class <| "edit-intro " ++ hideIfNotEditable submission.editable ]
+                [ h1 [] [ text "Kjør på, beskriv bidraget ditt" ]
+                , p [ class "ingress" ] [ text "Fyll inn feltene nedenfor for å sende inn ditt forslag til fagdag-bidrag. Ikke glem å markere det som innsendt når du er ferdig, så komiteen vet at du er ferdig med kladdingen." ]
+                , div [ class "help-part" ]
+                    [ strong [] [ span [] [ text "6. august 2018" ], text "Frist for innsending" ]
+                    , p [] [ text "Skriv ferdig foredrags-forslagene dine og marker de som innsendt innen denne datoen. Vi autolagrer for deg underveis så du aldri risikerer å miste noe." ]
                     ]
-                , p [ class "input-description" ] [ text "Skriv noen setninger om deg selv, og hvorfor akkurat du brenner for å snakke om dette." ]
-                , ul [ class "speakers" ] <|
-                    List.map (viewSpeaker submission <| List.length submission.speakers) submission.speakers
+                , div [ class "help-part" ]
+                    [ strong [] [ span [] [ text "1. september 2018" ], text "Foredrag blir valgt ut" ]
+                    , p [] [ text "Vi forsøker å velge ut alle bidragene innen denne tiden." ]
+                    ]
+                , div [ class "help-part" ]
+                    [ strong [] [ span [] [ text "19. oktober 2018" ], text "Fagdag! Wooh!" ]
+                    , p [] [ text "Frem med HDMI-donglene, pynt på håret – her skal det presenteres. Uansett om det er en lyntale du skal holde for aller første gang; eller du har gjort dette 100 ganger før, men likevel har sommerfugler i magen: lykke til! :)" ]
+                    ]
                 ]
-            , div [ class <| "input-section " ++ hideIfNotEditable submission.editable ++ " " ++ hideIfApprovedRejected submission.status ]
-                [ h2 [] [ text "Er du ferdig eller ikke?" ]
-                , p [ class "input-description" ] [ text "Behold gjerne foredraget ditt som en kladd så lenge du vil. Ingen får se det før du flipper den magiske radio-button'en." ]
-                , p [ class "input-description input-description-strong" ] [ text "...men husk å gjøre det før deadline om du vil bli med i vurderingen!" ]
-                , radio "Kladdemodus: jeg er ikke helt klar enda" "status" "DRAFT" (Status "DRAFT") <| submission.status == "DRAFT"
-                , radio "Klar, ferdig, gå: La komiteen se på det og vurdere" "status" "SUBMITTED" (Status "SUBMITTED") <| submission.status == "SUBMITTED"
+            , div [ class <| "comments-wrapper " ++ hideIfNoComments submission ]
+                [ h2 [] [ text "Kommentarer fra komiteen" ]
+                , p [] [ text "Komiteen har lagt inn følgende kommentarer på ditt bidrag. Du kan kommentere tilbake, eller bare redigere foredraget ditt nedenfor dersom det er gode forbedringsforslag." ]
+                , viewComments submission model
                 ]
-            , div [ class "sticky-footer-filler" ] []
+            , div [ class "edit-submission" ]
+                [ div [ class <| "cant-edit-message " ++ hideIfEditable submission.editable ] [ text "Du kan ikke redigere dette foredraget. Kun foredrag fra fremtidige fagdager er redigerbare." ]
+                , div [ class "input-section" ]
+                    [ h2 [] [ text "Vent, hva er nytt til denne fagdagen?" ]
+                    , p [ class "input-description" ] [ text "Denne fagdagen gjør ting litt annerledes. Vi har samlet litt info om bidrag her:" ]
+                    , a [ class "input-description", href "/bidrag_formater.pdf" ] [ text "Slides om formater" ]
+                    ]
+                , div [ class "input-section" ]
+                    [ h2 [] [ text "Tittel" ]
+                    , p [ class "input-description" ] [ text "Beskriv bidraget ditt med en kort og konsis tittel. Humor er viktig, men ikke gjør det for fancy – husk at folk skal skjønne hva du skal snakke om ;)" ]
+                    , input [ type_ "text", value submission.title, onInput Title, placeholder "Kort og konsist = perfekt og presist!" ] []
+                    ]
+                , div [ class "input-section" ]
+                    [ h2 [] [ text "Beskrivelse" ]
+                    , p [ class "input-description" ] [ text "Skriv en kort beskrivelse av bidraget ditt. Maks 150 ord er en fin tommelfinger-regel." ]
+                    , textarea [ value submission.abstract, onInput Abstract, placeholder "Her kan du selge bidraget ditt! Hvorfor burde vi komme og høre eller se på _akkurat deg_?" ] []
+                    ]
+                , div [ class "input-section" ] <|
+                    List.append
+                        [ h2 [] [ text "Format" ]
+                        , p [ class "input-description" ] [ text "Hvilket format ser du for deg passer best for å få fram poenget ditt? Kort og konsist, lengre og mer utfyllende, eller skikkelig hands-on?" ]
+                        ]
+                        (List.map (radio2 submission) possibleSubmissionFormats)
+                , div [ class "input-section" ]
+                    [ h2 [] [ text "Lengde" ]
+                    , p [ class "input-description" ] [ text <| formatText submission.format ]
+                    , viewLength submission
+                    ]
+                , div [ class "input-section" ]
+                    [ h2 [] [ text "Ekstra utstyr?" ]
+                    , p [ class "input-description" ] [ text "Er det noe spesielt du trenger for å gjennomføre sesjonen din? Du trenger ikke spesifisere åpenbare ting som prosjektor, nettverk og mikrofon, men trenger du en utstoppet oter så bør du skrive opp det..." ]
+                    , textarea [ class "small-textarea", value submission.equipment, onInput Equipment, placeholder "Skriv hva du trenger, din personlige raider. Røde non-stop?..." ] []
+                    ]
+                , div [ class "input-section" ]
+                    [ div [ class "flex-header" ]
+                        [ h2 [ class "flex-header-element" ] [ text "Hvem er du? (eller dere)" ]
+                        , div [ class "flex-header-element" ]
+                            [ if List.length submission.speakers > 4 then
+                                div [] []
+                              else
+                                button [ onClick AddSpeaker, class "button-new" ] [ text "Legg til foredragsholder" ]
+                            ]
+                        ]
+                    , p [ class "input-description" ] [ text "Skriv noen setninger om deg selv, og hvorfor akkurat du brenner for å snakke om dette." ]
+                    , ul [ class "speakers" ] <|
+                        List.map (viewSpeaker submission <| List.length submission.speakers) submission.speakers
+                    ]
+                , div [ class <| "input-section " ++ hideIfNotEditable submission.editable ++ " " ++ hideIfApprovedRejected submission.status ]
+                    [ h2 [] [ text "Er du ferdig eller ikke?" ]
+                    , p [ class "input-description" ] [ text "Behold gjerne foredraget ditt som en kladd så lenge du vil. Ingen får se det før du flipper den magiske radio-button'en." ]
+                    , p [ class "input-description input-description-strong" ] [ text "...men husk å gjøre det før deadline om du vil bli med i vurderingen!" ]
+                    , radio "Kladdemodus: jeg er ikke helt klar enda" "status" "DRAFT" (Status "DRAFT") <| submission.status == "DRAFT"
+                    , radio "Klar, ferdig, gå: La komiteen se på det og vurdere" "status" "SUBMITTED" (Status "SUBMITTED") <| submission.status == "SUBMITTED"
+                    ]
+                , div [ class "sticky-footer-filler" ] []
+                ]
             ]
-        ]
 
 
 viewLength : Submission -> Html SubmissionField
 viewLength s =
     case s.format of
-        "presentation" ->
+        Presentation ->
             select [ onInput Length ]
                 [ option [ value "40", selected <| s.length == "40" ] [ text "40 minutter" ]
                 , option [ value "20", selected <| s.length == "20" ] [ text "20 minutter" ]
                 ]
 
-        "lightning-talk" ->
+        LightningTalk ->
             select [ onInput Length ]
                 [ option [ value "10", selected <| s.length == "10" ] [ text "10 minutter" ]
                 ]
 
-        _ ->
+        Exhibition ->
+            select [ onInput Length ]
+                [ option [ value "1000", selected <| s.length == "40" ] [ text "All day long" ]
+                ]
+
+        Workshop ->
             select [ onInput Length ]
                 [ option [ value "150", selected <| s.length == "150" ] [ text "2,5 timer" ]
                 , option [ value "300", selected <| s.length == "300" ] [ text "5 timer" ]
+                ]
+
+        Unknown format ->
+            select [ onInput Length ]
+                [ option [ value "1000", selected <| s.length == "1000" ] [ text "Hele dagen" ]
+                ]
+
+        PechaKucha ->
+            select [ onInput Length ]
+                [ option [ value "7", selected <| s.length == "7" ] [ text "Alltid 6 minutter og 40 sekunder" ]
+                ]
+
+        _ ->
+            select [ onInput Length ]
+                [ option [ value "1000", selected <| s.length == "1000" ] [ text "Ikke relevant" ]
                 ]
 
 
@@ -249,6 +278,7 @@ hideIfNotEditable editable =
     else
         ""
 
+
 hideIfApprovedRejected : String -> String
 hideIfApprovedRejected status =
     if status == "APPROVED" then
@@ -277,17 +307,34 @@ radio l group val msg selected =
         ]
 
 
-formatText : String -> String
+radio2 : Submission -> SubmissionFormat -> Html SubmissionField
+radio2 submission subFormat =
+    radio (SubFormat.toString subFormat) "format" "presentation" (Format subFormat) <| submission.format == subFormat
+
+
+formatText : SubmissionFormat -> String
 formatText format =
     case format of
-        "presentation" ->
+        Presentation ->
             "Hvor lang burde presentasjonen din være?"
 
-        "lightning-talk" ->
+        LightningTalk ->
             "Hvor lang skal lyntalen din være? (PS: akkurat nå kjører vi bare 10 minutters lyntaler, så du har ikke noe valg her. Sånn er livet av og til :P)"
 
-        _ ->
+        Workshop ->
             "Hvor lang burde workshop'en din være?"
+
+        Exhibition ->
+            "Hvor lenge skal utstillingen vare?"
+
+        PechaKucha ->
+            "Dumt spørsmål. 20 slides * 20 sekunder er???"
+
+        Unknown f ->
+            "Hvor lenge skal " ++ f ++ " vare?"
+
+        _ ->
+            "Hvor lenge skal herligheten vare?"
 
 
 viewLastSaved : Maybe Time.Time -> String

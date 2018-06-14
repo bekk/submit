@@ -1,6 +1,7 @@
 module Model.Submission exposing (Model, initModel, Submission, Speaker, Comment, initSpeaker)
 
 import Backend.Network exposing (RequestStatus(..))
+import DataTypes.SubmissionFormat exposing (SubmissionFormat)
 import Time
 
 
@@ -17,7 +18,7 @@ type alias Submission =
     { abstract : String
     , conferenceId : String
     , equipment : String
-    , format : String
+    , format : SubmissionFormat
     , id : String
     , intendedAudience : String
     , language : String

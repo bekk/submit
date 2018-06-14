@@ -1,7 +1,8 @@
 module Decoder.Submission exposing (decoder, decodeComment)
 
+import DataTypes.SubmissionFormat as SubFormat exposing (SubmissionFormat(Unknown))
 import Model.Submission exposing (..)
-import Json.Decode exposing (Decoder, string, list, map, bool)
+import Json.Decode exposing (Decoder, andThen, bool, list, map, string, succeed)
 import Json.Decode.Pipeline exposing (decode, required, optional)
 
 
@@ -11,7 +12,7 @@ decoder =
         |> optional "abstract" string ""
         |> required "conferenceId" string
         |> optional "equipment" string ""
-        |> optional "format" string ""
+        |> optional "format" SubFormat.decode (Unknown "")
         |> required "id" string
         |> optional "intendedAudience" string ""
         |> optional "language" string ""

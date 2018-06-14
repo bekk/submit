@@ -14,7 +14,11 @@ import Messages exposing (Msg(..))
 
 introText : List String
 introText =
-    [ "Neste fagdag avholdes fredag 2. mars. Det er ingen tema for denne fagdagen. Her står vi fritt til å sende inn hva vi brenner for mest."
+    [ "Neste fagdag avholdes fredag 19. oktober. Temaet for fagdagen er Zen. "
+        ++ "En rolig, reflekterende, mer “nedpå” dag. En fagdag kanskje litt mer tilpasset de mer introverte av oss."
+        ++ "En dag vi går rundt og hører på foredrag med øreklokker på, kikker på utstillinger med prosjektinstallasjoner "
+        ++ "(plakater, bilder, demo’s, osv…). Litt mer museums-følelse, og med tilsvarende rolig fest etterpå "
+        ++ "- mer lounging og rom for å diskutere og snakke om det man har sett og hørt og opplevd på fagdagen."
     ]
 
 
@@ -62,7 +66,7 @@ viewSubmissions model submissions =
                 text ""
             else
                 div [] <|
-                    [ p [ class "intro-text intro-text--pitch" ] [ text "Bekk Fagdag, mars 2018!" ]
+                    [ p [ class "intro-text intro-text--pitch" ] [ text "Bekk Fagdag, oktober 2018!" ]
                     ]
                         ++ List.map (\t -> p [ class "intro-text" ] [ text t ]) introText
     in

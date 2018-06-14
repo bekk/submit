@@ -1,5 +1,6 @@
 module Submission exposing (updateSubmissionField)
 
+import DataTypes.SubmissionFormat exposing (SubmissionFormat(..))
 import Model exposing (AppConfig)
 import Model.Submission exposing (..)
 import Messages exposing (..)
@@ -183,13 +184,13 @@ updateSpeaker i ( j, speaker ) updateFunction =
         ( j, speaker )
 
 
-getLength : String -> String
+getLength : SubmissionFormat -> String
 getLength format =
     case format of
-        "presentation" ->
+        Presentation ->
             "40"
 
-        "lightning-talk" ->
+        LightningTalk ->
             "10"
 
         _ ->
