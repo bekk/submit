@@ -14,11 +14,21 @@ import Messages exposing (Msg(..))
 
 introText : List String
 introText =
-    [ "Neste fagdag avholdes fredag 19. oktober. Temaet for fagdagen er Zen. "
-        ++ "En rolig, reflekterende, mer “nedpå” dag. En fagdag kanskje litt mer tilpasset de mer introverte av oss."
-        ++ "En dag vi går rundt og hører på foredrag med øreklokker på, kikker på utstillinger med prosjektinstallasjoner "
-        ++ "(plakater, bilder, demo’s, osv…). Litt mer museums-følelse, og med tilsvarende rolig fest etterpå "
-        ++ "- mer lounging og rom for å diskutere og snakke om det man har sett og hørt og opplevd på fagdagen."
+    [ "19. oktober avholdes fagdagen i nytt format. "
+        ++ "Hva er nytt tenker du? Foruten om ny lokasjon, prøver vi oss på nye formater på foredragene, "
+        ++ "og åpner samtidig for at noen foredrag kan holdes flere ganger per dag."
+    , "Er du ikke glad i å snakke foran mange mennesker kan du for eksempel lage en video, "
+        ++ "eller vise frem det du jobber med på prosjekt i en utstilling. "
+        ++ "Bobler du over av ting du har lyst å diskutere kan du komme med et forslag til hva du ønsker å diskutere,"
+        ++ "eller rett og slett høre at noen andre diskuterer ditt spørsmål. Vi utfordrer foredragssnakketøyet "
+        ++ "med 20 slides på 20 sekunder hver i Petcha Kutcha stil, og håper at mange av dere tar denne utfordringen "
+        ++ "– så gøy det kan bli!"
+    , "Vi åpner også for at man kan skru ned tempoet et par hakk, og rusle rundt og få med seg fagdagen i eget tempo. "
+        ++ "Ingen skuler stygt på deg om du reiser deg opp midt under et foredrag og rusler videre for å få med "
+        ++ "deg en interessant diskusjon, eller finne inspirasjon i utstilling eller bare å se på folk."
+    , "Mye er med andre ord nytt. Om alt fungerer vet vi ikke helt enda. "
+        ++ "Men det vi er sikre på er at vi trenger hjelp av dere og deres engasjement, "
+        ++ "kunnskap og vilje til å dele for å få til denne fagdagen."
     ]
 
 

@@ -7,9 +7,11 @@ type SubmissionFormat
     = Presentation
     | LightningTalk
     | Workshop
-    | Exhibition
+    | ExhibitionProject
+    | ExhibitionHobby
     | PechaKucha
-    | Video
+    | VideoExternal
+    | VideoInternal
     | WhateverYouWant
     | Unknown String
 
@@ -36,14 +38,20 @@ fromSlug raw =
         "workshop" ->
             Workshop
 
-        "exhibition" ->
-            Exhibition
+        "exhibition-project" ->
+            ExhibitionProject
+
+        "exhibition-hobby" ->
+            ExhibitionHobby
 
         "pecha-kucha" ->
             PechaKucha
 
-        "video" ->
-            Video
+        "video-external" ->
+            VideoExternal
+
+        "video-internal" ->
+            VideoInternal
 
         "whatever-you-want" ->
             WhateverYouWant
@@ -64,14 +72,20 @@ toSlug s =
         Workshop ->
             "workshop"
 
-        Exhibition ->
-            "exhibition"
+        ExhibitionProject ->
+            "exhibition-project"
+
+        ExhibitionHobby ->
+            "exhibition-hobby"
 
         PechaKucha ->
             "pecha-kucha"
 
-        Video ->
-            "video"
+        VideoExternal ->
+            "video-eksternal"
+
+        VideoInternal ->
+            "video-internal"
 
         WhateverYouWant ->
             "whatever-you-want"
@@ -92,14 +106,20 @@ toString s =
         Workshop ->
             "Workshop"
 
-        Exhibition ->
-            "Utstilling"
+        ExhibitionProject ->
+            "Utstilling fra jobbprosjekt"
+
+        ExhibitionHobby ->
+            "Utstilling fra hobbyprosjekt"
 
         PechaKucha ->
             "Pecha Kucha"
 
-        Video ->
-            "Video"
+        VideoExternal ->
+            "Video - fra internett"
+
+        VideoInternal ->
+            "Video - din egen video"
 
         WhateverYouWant ->
             "Hva du vil! Finn på noe kult"

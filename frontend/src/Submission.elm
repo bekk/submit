@@ -193,5 +193,8 @@ getLength format =
         LightningTalk ->
             "10"
 
+        PechaKucha ->
+            "7"
+
         _ ->
             "120"
