@@ -123,10 +123,10 @@ toString s =
             "Pecha Kucha"
 
         VideoExternal ->
-            "Video - fra internett"
+            "Video - forslag på eksisterende"
 
         VideoInternal ->
-            "Video - din egen video"
+            "Video - lage ny"
 
         TheGoodTalk ->
             "Den gode samtalen"
