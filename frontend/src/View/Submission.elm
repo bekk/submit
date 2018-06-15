@@ -82,8 +82,8 @@ viewSubmissionDetails submission model =
             , Presentation40
             , Exhibition
             , PechaKucha
-            , VideoInternal
-            , VideoExternal
+            , VideoNew
+            , VideoExisting
             , TheGoodTalk
             , WhateverYouWant
             ]
@@ -170,7 +170,7 @@ viewTitleSection submission =
                 ]
     in
         case submission.format of
-            VideoExternal ->
+            VideoExisting ->
                 titleSection "Hva er tittel på videoen?" ""
 
             TheGoodTalk ->
@@ -183,7 +183,7 @@ viewTitleSection submission =
 viewDescription : Submission -> Html SubmissionField
 viewDescription submission =
     case submission.format of
-        VideoExternal ->
+        VideoExisting ->
             div [ class "input-section" ]
                 [ h2 [] [ text "URL" ]
                 , p

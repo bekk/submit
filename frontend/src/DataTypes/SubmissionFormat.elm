@@ -10,8 +10,8 @@ type SubmissionFormat
     | Workshop
     | Exhibition
     | PechaKucha
-    | VideoExternal
-    | VideoInternal
+    | VideoExisting
+    | VideoNew
     | TheGoodTalk
     | WhateverYouWant
     | Unknown String
@@ -48,11 +48,11 @@ fromSlug raw =
         "pecha-kucha" ->
             PechaKucha
 
-        "video-external" ->
-            VideoExternal
+        "video-existing" ->
+            VideoExisting
 
-        "video-internal" ->
-            VideoInternal
+        "video-new" ->
+            VideoNew
 
         "den-gode-samtalen" ->
             TheGoodTalk
@@ -85,11 +85,11 @@ toSlug s =
         PechaKucha ->
             "pecha-kucha"
 
-        VideoExternal ->
-            "video-external"
+        VideoExisting ->
+            "video-existing"
 
-        VideoInternal ->
-            "video-internal"
+        VideoNew ->
+            "video-new"
 
         TheGoodTalk ->
             "den-gode-samtalen"
@@ -122,10 +122,10 @@ toString s =
         PechaKucha ->
             "Pecha Kucha"
 
-        VideoExternal ->
+        VideoExisting ->
             "Video - forslag på eksisterende"
 
-        VideoInternal ->
+        VideoNew ->
             "Video - lage ny"
 
         TheGoodTalk ->

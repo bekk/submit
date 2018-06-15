@@ -186,4 +186,4 @@ updateSpeaker i ( j, speaker ) updateFunction =
 
 getLength : SubmissionFormat -> String
 getLength format =
-    ""
+    "TBA"
