@@ -4,14 +4,15 @@ import Json.Decode exposing (Decoder, andThen, string, succeed)
 
 
 type SubmissionFormat
-    = Presentation
+    = Presentation20
+    | Presentation40
     | LightningTalk
     | Workshop
-    | ExhibitionProject
-    | ExhibitionHobby
+    | Exhibition
     | PechaKucha
     | VideoExternal
     | VideoInternal
+    | TheGoodTalk
     | WhateverYouWant
     | Unknown String
 
@@ -29,8 +30,11 @@ decode =
 fromSlug : String -> SubmissionFormat
 fromSlug raw =
     case raw of
-        "presentation" ->
-            Presentation
+        "presentation-20-min" ->
+            Presentation20
+
+        "presentation-40-min" ->
+            Presentation40
 
         "lightning-talk" ->
             LightningTalk
@@ -38,11 +42,8 @@ fromSlug raw =
         "workshop" ->
             Workshop
 
-        "exhibition-project" ->
-            ExhibitionProject
-
-        "exhibition-hobby" ->
-            ExhibitionHobby
+        "exhibition" ->
+            Exhibition
 
         "pecha-kucha" ->
             PechaKucha
@@ -52,6 +53,9 @@ fromSlug raw =
 
         "video-internal" ->
             VideoInternal
+
+        "den-gode-samtalen" ->
+            TheGoodTalk
 
         "whatever-you-want" ->
             WhateverYouWant
@@ -63,8 +67,11 @@ fromSlug raw =
 toSlug : SubmissionFormat -> String
 toSlug s =
     case s of
-        Presentation ->
-            "presentation"
+        Presentation20 ->
+            "presentation-20-min"
+
+        Presentation40 ->
+            "presentation-40-min"
 
         LightningTalk ->
             "lightning-talk"
@@ -72,20 +79,20 @@ toSlug s =
         Workshop ->
             "workshop"
 
-        ExhibitionProject ->
-            "exhibition-project"
-
-        ExhibitionHobby ->
-            "exhibition-hobby"
+        Exhibition ->
+            "exhibition"
 
         PechaKucha ->
             "pecha-kucha"
 
         VideoExternal ->
-            "video-eksternal"
+            "video-external"
 
         VideoInternal ->
             "video-internal"
+
+        TheGoodTalk ->
+            "den-gode-samtalen"
 
         WhateverYouWant ->
             "whatever-you-want"
@@ -97,8 +104,11 @@ toSlug s =
 toString : SubmissionFormat -> String
 toString s =
     case s of
-        Presentation ->
-            "Foredrag"
+        Presentation20 ->
+            "Foredrag, 20 minutter"
+
+        Presentation40 ->
+            "Foredrag, 40 minutter"
 
         LightningTalk ->
             "Lyntale"
@@ -106,11 +116,8 @@ toString s =
         Workshop ->
             "Workshop"
 
-        ExhibitionProject ->
-            "Utstilling fra jobbprosjekt"
-
-        ExhibitionHobby ->
-            "Utstilling fra hobbyprosjekt"
+        Exhibition ->
+            "Prosjektutstilling"
 
         PechaKucha ->
             "Pecha Kucha"
@@ -120,6 +127,9 @@ toString s =
 
         VideoInternal ->
             "Video - din egen video"
+
+        TheGoodTalk ->
+            "Den gode samtalen"
 
         WhateverYouWant ->
             "Hva du vil! Finn på noe kult"

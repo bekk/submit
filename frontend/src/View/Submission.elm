@@ -78,14 +78,13 @@ viewSubmissionDetails : Submission -> Model -> Html SubmissionField
 viewSubmissionDetails submission model =
     let
         possibleSubmissionFormats =
-            [ Presentation
-            , LightningTalk
-            , Workshop
-            , ExhibitionProject
-            , ExhibitionHobby
+            [ Presentation20
+            , Presentation40
+            , Exhibition
             , PechaKucha
             , VideoInternal
             , VideoExternal
+            , TheGoodTalk
             , WhateverYouWant
             ]
     in
@@ -114,31 +113,13 @@ viewSubmissionDetails submission model =
                 ]
             , div [ class "edit-submission" ]
                 [ div [ class <| "cant-edit-message " ++ hideIfEditable submission.editable ] [ text "Du kan ikke redigere dette foredraget. Kun foredrag fra fremtidige fagdager er redigerbare." ]
-                , div [ class "input-section" ]
-                    [ h2 [] [ text "Vent, hva er nytt til denne fagdagen?" ]
-                    , p [ class "input-description" ] [ text "Denne fagdagen gjør ting litt annerledes. Vi har samlet litt info om bidrag her:" ]
-                    , a [ class "input-description", href "/bidrag_formater.pdf" ] [ text "Slides om formater" ]
-                    ]
                 , div [ class "input-section" ] <|
                     List.append
                         [ h2 [] [ text "Format" ]
-                        , p [ class "input-description" ] [ text "Hvilket format ser du for deg passer best for å få fram poenget ditt? Kort og konsist, lengre og mer utfyllende, eller skikkelig hands-on?" ]
                         ]
                         (List.map (radio2 submission) possibleSubmissionFormats)
-                , div [ class "input-section" ]
-                    [ h2 [] [ text "Tittel" ]
-                    , p [ class "input-description" ]
-                        [ case submission.format of
-                            VideoExternal ->
-                                text "Hva er tittel på videoen?"
-
-                            _ ->
-                                text "Beskriv bidraget ditt med en kort og konsis tittel. Humor er viktig, men ikke gjør det for fancy – husk at folk skal skjønne hva du skal snakke om ;)"
-                        ]
-                    , input [ type_ "text", value submission.title, onInput Title, placeholder "Kort og konsist = perfekt og presist!" ] []
-                    ]
+                , viewTitleSection submission
                 , viewDescription submission
-                , viewLengthSection submission
                 , div [ class "input-section" ]
                     [ h2 [] [ text "Ekstra utstyr?" ]
                     , p [ class "input-description" ] [ text "Er det noe spesielt du trenger for å gjennomføre sesjonen din? Du trenger ikke spesifisere åpenbare ting som prosjektor, nettverk og mikrofon, men trenger du en utstoppet oter så bør du skrive opp det..." ]
@@ -170,82 +151,61 @@ viewSubmissionDetails submission model =
             ]
 
 
-viewLengthSection : Submission -> Html SubmissionField
-viewLengthSection submission =
+viewTitleSection : Submission -> Html SubmissionField
+viewTitleSection submission =
     let
-        section =
+        titleSection : String -> String -> Html SubmissionField
+        titleSection titleText placeholderText =
             div [ class "input-section" ]
-                [ h2 [] [ text "Lengde" ]
-                , p [ class "input-description" ] [ text <| formatText submission.format ]
-                , viewLength submission
+                [ h2 [] [ text "Tittel" ]
+                , p [ class "input-description" ]
+                    [ text titleText
+                    ]
+                , input [ type_ "text", value submission.title, onInput Title, placeholder placeholderText ] []
                 ]
     in
         case submission.format of
-            Presentation ->
-                section
+            VideoExternal ->
+                titleSection "Hva er tittel på videoen?" ""
 
-            Workshop ->
-                section
+            TheGoodTalk ->
+                titleSection "Hvem ønsker du skal snakke?" "Navn på kule folk"
 
             _ ->
-                div [] []
+                titleSection "Beskriv bidraget ditt med en kort og konsis tittel. Humor er viktig, men ikke gjør det for fancy – husk at folk skal skjønne hva du skal snakke om ;)" "Kort og konsist = perfekt og presist!"
 
 
 viewDescription : Submission -> Html SubmissionField
 viewDescription submission =
-    div [ class "input-section" ]
-        [ h2 [] [ text "Beskrivelse" ]
-        , p
-            [ class "input-description" ]
-            [ case submission.format of
-                VideoExternal ->
-                    text "Legg ved url og skriv en kort beskrivelse av videoen"
-
-                _ ->
-                    text "Skriv en kort beskrivelse av bidraget ditt. Maks 150 ord er en fin tommelfinger-regel."
-            ]
-        , textarea [ value submission.abstract, onInput Abstract, placeholder "Her kan du selge bidraget ditt! Hvorfor burde vi komme og høre eller se på _akkurat deg_?" ] []
-        ]
-
-
-viewLength : Submission -> Html SubmissionField
-viewLength s =
-    case s.format of
-        Presentation ->
-            select [ onInput Length ]
-                [ option [ value "40", selected <| s.length == "40" ] [ text "40 minutter" ]
-                , option [ value "20", selected <| s.length == "20" ] [ text "20 minutter" ]
+    case submission.format of
+        VideoExternal ->
+            div [ class "input-section" ]
+                [ h2 [] [ text "URL" ]
+                , p
+                    [ class "input-description" ]
+                    [ text "Legg ved url og skriv en kort beskrivelse av videoen. F.eks. http://youtube.com?"
+                    ]
+                , textarea [ value submission.abstract, onInput Abstract, placeholder "Legg ved URL til videoen og beskriv den kort" ] []
                 ]
 
-        LightningTalk ->
-            select [ onInput Length ]
-                [ option [ value "10", selected <| s.length == "10" ] [ text "10 minutter" ]
-                ]
-
-        ExhibitionProject ->
-            select [ onInput Length ]
-                [ option [ value "1000", selected <| s.length == "40" ] [ text "All day long" ]
-                ]
-
-        Workshop ->
-            select [ onInput Length ]
-                [ option [ value "150", selected <| s.length == "150" ] [ text "2,5 timer" ]
-                , option [ value "300", selected <| s.length == "300" ] [ text "5 timer" ]
-                ]
-
-        Unknown format ->
-            select [ onInput Length ]
-                [ option [ value "1000", selected <| s.length == "1000" ] [ text "Hele dagen" ]
-                ]
-
-        PechaKucha ->
-            select [ onInput Length ]
-                [ option [ value "7", selected <| s.length == "7" ] [ text "Alltid 6 minutter og 40 sekunder" ]
+        TheGoodTalk ->
+            div [ class "input-section" ]
+                [ h2 [] [ text "Beskrivelsse" ]
+                , p
+                    [ class "input-description" ]
+                    [ text "Hva vil du at den/de skal snakke om?"
+                    ]
+                , textarea [ value submission.abstract, onInput Abstract, placeholder "Fyll inn popcorn-tema her" ] []
                 ]
 
         _ ->
-            select [ onInput Length ]
-                [ option [ value "1000", selected <| s.length == "1000" ] [ text "Ikke relevant" ]
+            div [ class "input-section" ]
+                [ h2 [] [ text "Beskrivelse" ]
+                , p
+                    [ class "input-description" ]
+                    [ text "Skriv en kort beskrivelse av bidraget ditt. Maks 150 ord er en fin tommelfinger-regel."
+                    ]
+                , textarea [ value submission.abstract, onInput Abstract, placeholder "Her kan du selge bidraget ditt! Hvorfor burde vi komme og høre eller se på _akkurat deg_?" ] []
                 ]
 
 
@@ -361,7 +321,7 @@ radio2 submission subFormat =
 formatText : SubmissionFormat -> String
 formatText format =
     case format of
-        Presentation ->
+        Presentation20 ->
             "Hvor lang burde presentasjonen din være?"
 
         LightningTalk ->
@@ -370,7 +330,7 @@ formatText format =
         Workshop ->
             "Hvor lang burde workshop'en din være?"
 
-        ExhibitionProject ->
+        Exhibition ->
             "Hvor lenge skal utstillingen vare?"
 
         PechaKucha ->

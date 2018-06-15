@@ -186,15 +186,4 @@ updateSpeaker i ( j, speaker ) updateFunction =
 
 getLength : SubmissionFormat -> String
 getLength format =
-    case format of
-        Presentation ->
-            "40"
-
-        LightningTalk ->
-            "10"
-
-        PechaKucha ->
-            "7"
-
-        _ ->
-            "120"
+    ""
