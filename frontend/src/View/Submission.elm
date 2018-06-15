@@ -113,6 +113,11 @@ viewSubmissionDetails submission model =
                 ]
             , div [ class "edit-submission" ]
                 [ div [ class <| "cant-edit-message " ++ hideIfEditable submission.editable ] [ text "Du kan ikke redigere dette foredraget. Kun foredrag fra fremtidige fagdager er redigerbare." ]
+                , div [ class "input-section" ]
+                    [ h2 [] [ text "Vent, hva er alle disse formatene?" ]
+                    , p [ class "input-description" ] [ text "Vi har laget noen slides som forklarer litt mer om de ulike formatene. Slidsene finner du her:" ]
+                    , a [ class "input-description", href "/bidrag_formater.pdf" ] [ text "Info om bidragsformater - lenke til pdf" ]
+                    ]
                 , div [ class "input-section" ] <|
                     List.append
                         [ h2 [] [ text "Format" ]
